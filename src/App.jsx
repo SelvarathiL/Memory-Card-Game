@@ -1,58 +1,4 @@
-// import React from "react";
-// import { useState } from "react";
-// import Header from "./components/Header";
-// import Content from "./components/Content";
-// import Footer from "./components/Footer";
-// import AddItem from "./components/AddItem";
-// import Filter from "./components/Filter";
 
-// function App()
-// {
-//     const [tasks,setTasks] = useState([
-//     ])
-
-//     const [newTask,setNewTask] = useState("");
-//     const [search,setSearch] = useState("");
-
-//     function handleChecked(id)
-//     {
-//       setTasks(tasks.map(task=>
-//         task.id===id?{...task,checked:!task.checked}:task
-//       ))
-//     }
-//     function handleDelete(id)
-//     {
-//       setTasks(tasks.filter(task=>task.id!==id));
-//     }
-
-//     function handleNewTask(newtask)
-//     {
-//       if(newtask.length==0)
-//       {
-//         return;
-//       }
-//       let id = tasks.length ? tasks[tasks.length-1].id+1 : 1;
-//       const taskToAdd = {id,checked:false,task: newtask};
-//       setTasks([...tasks,taskToAdd]); 
-//       setNewTask("");
-//     }
-
-//     const filteredTasks = tasks.filter((task=>
-//       task.task.toLowerCase().includes(search.toLowerCase())
-//     ))
-    
-//     return(
-//       <div>
-//         <Header/>
-//         <AddItem newTask={newTask} setNewTask={setNewTask} handleNewTask={handleNewTask}/>
-//         <Filter search={search} setSearch={setSearch} />
-//         <Content tasks={filteredTasks} handleChecked={handleChecked} handleDelete={handleDelete}/>
-//         <Footer tasks={tasks}/>
-//       </div>
-//     )
-// }
-
-// export default App;
 
 
 import React from "react";
@@ -139,14 +85,3 @@ function App() {
 export default App;
 
 
-import React from "react";
-import Game from "./components/Game";
-
-function App()
-{
-    return(
-      <div>
-        <Game />
-      </div>
-    )
-}
