@@ -1,0 +1,446 @@
+/* Global Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Quicksand", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(60deg, #667eea 0%, #fca0df 100%);
+  min-height: 100vh;
+  color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* Main Container */
+.game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 95%;
+  max-width: 900px;
+}
+
+/* ===========================
+   Game Header
+=========================== */
+.game-header {
+  background: linear-gradient(60deg,rgb(182, 182, 252),rgb(251, 215, 221));
+  backdrop-filter: blur(1rem);
+  padding: 1rem 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  min-height: 100px;
+  width: 100vw;   /* 🔹 full viewport width */
+  margin-left: -50vw; 
+  left: 50%;      /* 🔹 trick to break out of container */
+  position: relative;
+}
+
+/* Left section: center logo */
+.header-left {
+  flex: 1;
+  display: flex;
+  justify-content: center;  /* center logo horizontally */
+  align-items: center;
+}
+
+.logo {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #667eea;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  white-space: nowrap;
+  margin-right: 8rem;
+  margin-left: 4rem;
+}
+
+/* Right section: controls + stats stacked nicely */
+.header-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* push content to the right */
+  gap: 2rem;
+  margin-right: 3rem;
+}
+
+.controls {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+#difficult-level {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: 2px solid #667eea;
+  border-radius: 0.7rem;
+  background: white;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+#difficult-level:hover {
+  background: #667eea;
+  color: white;
+}
+
+#difficult-level:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+}
+
+.controls button {
+  padding: 0.6rem 1.2rem;
+  font-size: 16px;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+  border: none;
+  border-radius: 0.7rem;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(245, 87, 108, 0.3);
+}
+
+.controls button:hover {
+  box-shadow: 0 6px 20px rgba(245, 87, 108, 0.4);
+}
+
+/* Stats: moves, points, timer */
+.stats {
+  display: flex;
+  flex-direction: row;   /* force everything in one line */
+  align-items: center;
+  gap: 1rem;             /* spacing between items */
+  white-space: nowrap;   /* prevent wrapping */
+}
+
+
+.stats p {
+  font-size: 1.2rem;
+  color: #555;
+  margin: 0;
+}
+
+.stats strong {
+  color: #667eea;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.time-left {
+  font-size: 1.2rem;
+  color: #f5576c;
+  font-weight: 600;
+  text-align: right;
+}
+
+/* ===========================
+   Responsive
+=========================== */
+@media (max-width: 768px) {
+  .game-header {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .header-left,
+  .header-right {
+    flex: unset;
+    width: 100%;
+    align-items: center;
+  }
+
+  .header-right {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .stats {
+    align-items: center;
+  }
+}
+
+
+/* ===========================
+   Game Board
+=========================== */
+.board {
+  display: grid;
+  gap: 0.9rem;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 2rem;
+  justify-content: center;
+}
+
+.card {
+  width: 90px;
+  height: 90px;
+  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+  border-radius: 12px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card::before {
+  content: '?';
+  position: absolute;
+  font-size: 36px;
+  color: #fff;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  backface-visibility: hidden;
+  transition: opacity 0.3s ease;
+}
+
+.card::after {
+  content: attr(data-content);
+  position: absolute;
+  font-size: 42px;
+  backface-visibility: hidden;
+  transform: rotateY(180deg);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.card:hover:not(.flipped) {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.card.flipped {
+  transform: rotateY(180deg);
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+}
+
+.card.flipped::before {
+  opacity: 0;
+}
+
+.card.flipped::after {
+  opacity: 1;
+}
+
+/* ===========================
+   Game Result Modal
+=========================== */
+.game-result {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 3rem 4rem;
+  border-radius: 2rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  z-index: 1000;
+  animation: popIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes popIn {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+.game-result::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgb(255, 222, 227);
+  z-index: -1;
+  backdrop-filter: blur(5px);
+}
+
+.game-result h2 {
+  font-size: 2rem;
+  color: #667eea;
+  font-weight: 800;
+}
+
+.game-result p {
+  font-size: 1.5rem;
+  color: #555;
+  font-weight: 600;
+}
+
+.game-result button {
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 1rem;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+/* ===========================
+   Timer
+=========================== */
+.timer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1rem;
+  color: #555;
+  font-weight: 400;
+}
+
+.timer strong {
+  color: #f5576c;
+  font-size: 20px;
+}
+
+/* ===========================
+   Responsive Design
+=========================== */
+@media (max-width: 768px) {
+  .game-header {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 15px 20px;
+  }
+
+  .header-left {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+  }
+
+  .logo {
+    font-size: 24px;
+    text-align: center;
+  }
+
+  .controls {
+    justify-content: center;
+  }
+
+  .header-right {
+    justify-content: center;
+    gap: 15px;
+  }
+
+  .board {
+    gap: 8px;
+    padding: 10px;
+    max-width: 100%;
+  }
+
+  .card {
+    width: 70px;
+    height: 70px;
+  }
+
+  .card::before {
+    font-size: 24px;
+  }
+
+  .card::after {
+    font-size: 30px;
+  }
+
+  .game-result {
+    padding: 40px 30px;
+    width: 90%;
+    max-width: 400px;
+  }
+
+  .game-result h2 {
+    font-size: 32px;
+  }
+
+  .game-result p {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 10px;
+  }
+
+  .logo {
+    font-size: 20px;
+  }
+
+  #difficult-level,
+  .controls button {
+    padding: 8px 15px;
+    font-size: 14px;
+  }
+
+  .header-right p {
+    font-size: 16px;
+  }
+
+  .header-right strong {
+    font-size: 18px;
+  }
+
+  .board {
+    gap: 6px;
+  }
+
+  .card {
+    width: 60px;
+    height: 60px;
+  }
+
+  .card::before {
+    font-size: 20px;
+  }
+
+  .card::after {
+    font-size: 24px;
+  }
+}
+
+.hint-popup {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ff4757;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    z-index: 1000;
+    animation: fadein 0.3s ease;
+}
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
